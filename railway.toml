@@ -1,0 +1,2 @@
+[deploy]
+predeploy = "npx playwright install --with-deps"
