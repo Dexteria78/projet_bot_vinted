@@ -21,10 +21,10 @@ async def get_current_items():
         items = await page.query_selector_all('a[href*="/items/"]')
 
         results = []
-        for item in items[:5]:
+        for item in items:
             url = await item.get_attribute('href')
             title = await item.get_attribute('aria-label') or 'Titre indisponible'
-            price = await page.eval_on_selector('.web_ui__Text__muted', 'el => el.innerText')
+            price = await page.evaluate('(element) => element.innerText', await item.query_selector('.web_ui__Text__muted')) or 'Prix non spécifié'
             results.append({"url": url, "title": title, "price": price})
 
         await browser.close()
@@ -42,7 +42,7 @@ async def check_vinted():
             seen_items.add(item[2])
             await channel.send(f"**{item[0]}**\nPrix : {item[1]}\n[Voir l'annonce]({item[2]})")
 
-        await asyncio.sleep(60)
+        await asyncio.sleep(30)
 
 @client.event
 async def on_ready():
