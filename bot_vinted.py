@@ -1,5 +1,5 @@
 import discord
-from playwright_aws_lambda import PlaywrightAwsLambda
+from playwright.async_api import async_playwright
 from dotenv import load_dotenv
 import os
 import asyncio
@@ -14,7 +14,7 @@ client = discord.Client(intents=intents)
 seen_items = set()
 
 async def get_current_items():
-    async with PlaywrightAwsLambda().start() as p:
+    async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         page = await browser.new_page()
         await page.goto(VINTED_URL)
