@@ -24,7 +24,8 @@ async def get_current_items():
         for item in items:
             url = await item.get_attribute('href')
             title = await item.get_attribute('aria-label') or 'Titre indisponible'
-            price = await page.evaluate('(element) => element.innerText', await item.query_selector('.web_ui__Text__muted')) or 'Prix non spécifié'
+            price_element = await item.query_selector('.web_ui__Text__muted')
+            price = await price_element.inner_text() if price_element else 'Prix non spécifié'
             results.append({"url": url, "title": title, "price": price})
 
         await browser.close()
