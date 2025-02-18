@@ -1,2 +1,2 @@
 [deploy]
-predeploy = "pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt && npx playwright install --with-deps"
+predeploy = "pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt && playwright install --with-deps"
