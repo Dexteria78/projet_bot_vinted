@@ -15,8 +15,10 @@ seen_items = set()
 
 async def get_current_items():
     async with async_playwright() as p:
+        print("Initialisation de Playwright...")
         browser = await p.chromium.launch(headless=True)
         page = await browser.new_page()
+        print("Navigation vers la page Vinted...")
         await page.goto(VINTED_URL)
         items = await page.query_selector_all('a[href*="/items/"]')
 
@@ -29,11 +31,13 @@ async def get_current_items():
             results.append({"url": url, "title": title, "price": price})
 
         await browser.close()
+        print("Annonces récupérées :", results)
         return results
 
 async def check_vinted():
     await client.wait_until_ready()
     channel = client.get_channel(CHANNEL_ID)
+    print("Démarrage de la surveillance des annonces...")
 
     while True:
         current_items = await get_current_items()
@@ -41,6 +45,7 @@ async def check_vinted():
 
         for item in new_items:
             seen_items.add(item[2])
+            print(f"Envoi sur Discord : {item}")
             await channel.send(f"**{item[0]}**\nPrix : {item[1]}\n[Voir l'annonce]({item[2]})")
 
         await asyncio.sleep(30)
